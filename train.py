@@ -20,7 +20,7 @@ def train(model, iterator, optimizer, criterion):
         
         optimizer.zero_grad()
         text, text_lengths = batch.text
-        predictions = model(text, text_lengths).squeeze(1)
+        predictions = model(text, text_lengths).squeeze()
         
         loss = criterion(predictions, batch.label)
         acc = binary_accuracy(predictions, batch.label)
@@ -44,7 +44,7 @@ def evaluate(model, iterator, criterion):
         for batch in iterator:
 
             text, text_lengths = batch.text            
-            predictions = model(text, text_lengths).squeeze(1)
+            predictions = model(text, text_lengths).squeeze()
             
             loss = criterion(predictions, batch.label)            
             acc = binary_accuracy(predictions, batch.label)
@@ -58,14 +58,15 @@ def evaluate(model, iterator, criterion):
 if __name__ == "__main__":
 
     EMBEDDING_DIM = 100
-    HIDDEN_DIM = 256
+    HIDDEN_DIM = 32
     OUTPUT_DIM = 1
     N_LAYERS = 2
     BIDIRECTIONAL = True
-    DROPOUT = 0.5
+    DROPOUT = 0.2
     N_EPOCHS = 5
-    BATCH_SIZE = 64
-
+    BATCH_SIZE = 32
+    torch.cuda.empty_cache()
+    
     train_iterator, valid_iterator, test_iterator = data_loaders(BATCH_SIZE, device=device, embedding=True)
     TEXT = get_vocab()
 
@@ -82,18 +83,14 @@ if __name__ == "__main__":
             OUTPUT_DIM, 
             N_LAYERS, 
             BIDIRECTIONAL, 
-            DROPOUT, 
-            PAD_IDX)
+            DROPOUT)
 
     # Intialise word embeddings
     pretrained_embeddings = TEXT.vocab.vectors
     model.embedding.weight.data.copy_(pretrained_embeddings)
-    UNK_IDX = TEXT.vocab.stoi[TEXT.unk_token]
-    model.embedding.weight.data[UNK_IDX] = torch.zeros(EMBEDDING_DIM)
-    model.embedding.weight.data[PAD_IDX] = torch.zeros(EMBEDDING_DIM)
 
     optimizer = optim.Adam(model.parameters())
-    criterion = nn.BCEWithLogitsLoss()
+    criterion = nn.BCELoss()
 
     model = model.to(device)
     criterion = criterion.to(device)

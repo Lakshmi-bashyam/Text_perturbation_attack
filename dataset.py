@@ -10,8 +10,8 @@ SEED = 1234
 
 torch.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
-TEXT = data.Field(tokenize = 'spacy', include_lengths = True)
-LABEL = data.LabelField(dtype = torch.float)
+TEXT = data.Field(tokenize = 'spacy', batch_first=True, include_lengths = True)
+LABEL = data.LabelField(dtype = torch.float, batch_first=True)
 
 def data_loaders(batch, device, embedding=True):
     MAX_VOCAB_SIZE = 25_000
@@ -32,8 +32,6 @@ def data_loaders(batch, device, embedding=True):
     train_iterator, valid_iterator, test_iterator = data.BucketIterator.splits(
         (train_data, valid_data, test_data), 
         batch_size = BATCH_SIZE,
-        sort_key = lambda x: len(x.text),
-        sort_within_batch=True,
         device = device)
     
     return (train_iterator, valid_iterator, test_iterator)

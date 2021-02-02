@@ -97,26 +97,35 @@ def get_perturbed_text(text):
         orig_text = orig_text.replace(ranking[j][0],synlist[index])
     return orig_text
 
-
+iterations = 700
 
 examples = []
 for label in ['pos', 'neg']:
+    index = 0
     for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
+            print('index: ', index)
             text = f.readline()
             examples.append({'text': text,'label': 0})
+            index = index +1
+            if (index >= 700):
+                break
 for label in ['pos', 'neg']:
-    for fname in glob.iglob(os.path.join
-            ('./aclImdb/test', label, '*.txt')):
+    index = 0
+    for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
+            print('index: ', index)
             text = f.readline()
             examples.append({'text': text,'label': 0})
+            index = index + 1
+            if (index >= 700):
+                break
 
 print(len(examples))
 
-index = 0
 perturbed_examples = []
 for label in ['pos', 'neg']:
+    index = 0
     for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
        # print('here')
         with io.open(fname, 'r', encoding="utf-8") as f:
@@ -127,8 +136,11 @@ for label in ['pos', 'neg']:
             #print('perturbed text: ', perturbed_text)
             perturbed_examples.append({'text': perturbed_text,'label': 1})
             index = index + 1
+            if (index >= 700):
+                break
 
 for label in ['pos', 'neg']:
+    index = 0
     for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
             print('index: ', index)
@@ -138,7 +150,8 @@ for label in ['pos', 'neg']:
             #print('perturbed text: ', perturbed_text)
             perturbed_examples.append({'text': perturbed_text,'label': 1})
             index = index + 1
-
+            if (index >= 700):
+                break
 
 final_data = []
 for item in examples:

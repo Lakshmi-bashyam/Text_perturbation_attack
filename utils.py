@@ -2,6 +2,7 @@ import torch
 import spacy
 nlp = spacy.load('en')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+from nltk.corpus import wordnet as wn
 
 def binary_accuracy(preds, y):
     #round predictions to the closest integer
@@ -15,7 +16,7 @@ def binary_accuracy(preds, y):
 def predict(model, sentence, vocab):
     tokenized = [tok.text for tok in nlp.tokenizer(sentence)] 
     # print(tokenized) #tokenize the sentence 
-    indexed = [vocab.stoi[t] for t in tokenized]          #convert to integer sequence
+    indexed = [vocab.get(t,0) for t in tokenized]          #convert to integer sequence
     length = [len(indexed)]                                    #compute no. of words
     tensor = torch.LongTensor(indexed).to(device)              #convert to tensor
     tensor = tensor.unsqueeze(1).T                             #reshape in form of batch,no. of words

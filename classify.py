@@ -19,6 +19,8 @@ import collections
 import numpy as np
 import math
 
+from utils import predict
+from utils import get_synonyms
 import nltk
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -68,6 +70,7 @@ model.eval()
 
 
 def get_perturbed_text(text):
+  #print("Getting the perturbed text")
   with torch.no_grad():
     ori_op = predict(model, text, vocab)
     ranking = {}
@@ -75,7 +78,7 @@ def get_perturbed_text(text):
     for word in nlp(text):
         if word.text not in string.punctuation and word.text not in stop_words:
             new_text = original_text.replace(word.text, '')
-            new_op = predict(model, new_text)
+            new_op = predict(model, new_text, vocab)
             ranking[word.text] = {"value": np.abs(ori_op - new_op).item(), "pos": word.pos_}
 
     ranking = sorted(ranking.items(), key=lambda x: x[1]['value'], reverse=True)
@@ -114,7 +117,8 @@ print(len(examples))
 index = 0
 perturbed_examples = []
 for label in ['pos', 'neg']:
-    for fname in glob.iglob(os.path.join('/content/aclImdb/train', label, '*.txt')):
+    for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
+       # print('here')
         with io.open(fname, 'r', encoding="utf-8") as f:
             print('index: ', index)
             text = f.readline()
@@ -125,7 +129,7 @@ for label in ['pos', 'neg']:
             index = index + 1
 
 for label in ['pos', 'neg']:
-    for fname in glob.iglob(os.path.join('/content/aclImdb/test', label, '*.txt')):
+    for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
             print('index: ', index)
             text = f.readline()
@@ -135,3 +139,15 @@ for label in ['pos', 'neg']:
             perturbed_examples.append({'text': perturbed_text,'label': 1})
             index = index + 1
 
+
+final_data = []
+for item in examples:
+  final_data.append(item)
+for item in perturbed_examples:
+  final_data.append(item)
+
+print(len(final_data))
+
+with open('final_data.json', 'w') as fout:
+    json.dump(final_data, fout)
+print("finished")

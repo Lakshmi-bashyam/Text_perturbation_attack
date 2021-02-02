@@ -61,7 +61,8 @@ if __name__ == "__main__":
             if word not in string.punctuation and word not in stop_words:
                 new_text = original_text.replace(word, '')
                 new_op = predict(model, new_text, TEXT.vocab)
-                print("Output without "+word+" is ",new_op)
+                #print('new output is: ', new_op)
+                #print("Output without "+word+" is ",new_op)
                 ranking[word] = np.abs(ori_op - new_op).item()
 
     print("word importance ranking")

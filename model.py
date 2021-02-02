@@ -33,7 +33,7 @@ class RNN(nn.Module):
         #embedded = [batch size, sent_len, emb dim]
       
         #packed sequence
-        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths,batch_first=True)
+        packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths,batch_first=True, enforce_sorted = False)
         
         packed_output, (hidden, cell) = self.lstm(packed_embedded)
         #hidden = [batch size, num layers * num directions,hid dim]

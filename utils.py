@@ -22,3 +22,25 @@ def predict(model, sentence, vocab):
     length_tensor = torch.LongTensor(length)                   #convert to tensor
     prediction = model(tensor, length_tensor)                  #prediction 
     return prediction.item()
+
+def get_synonyms(word):
+    if word[1]['pos'] == 'VERB':
+        pos = wn.VERB
+    elif word[1]['pos'] == 'ADJ':
+        pos = wn.ADJ
+    elif word[1]['pos'] == 'ADV':
+        pos = wn.ADV
+    elif word[1]['pos'] == 'NOUN':
+        pos = wn.NOUN
+    else:
+        return [word[0]]
+
+    synonyms = []
+    for syn in wn.synsets(word[0], pos=pos):
+        for l in syn.lemmas():
+            synonyms.append(l.name().replace("_", " "))
+    if not synonyms:
+        synonyms.append(word[0])
+    return list(set(synonyms))
+
+

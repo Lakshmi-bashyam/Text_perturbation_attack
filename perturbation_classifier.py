@@ -2,17 +2,17 @@ import csv
 import json
 
 
-with open('final_data.json') as f:
+with open('backup.json') as f:
         g = json.load(f)
         keys = g[0].keys()
         print(keys)
-        with open('perturbed_data.csv', 'w', newline='')  as output_file:
+        with open('perturbed_data.csv', 'w', newline='', encoding='utf8')  as output_file:
           dict_writer = csv.DictWriter(output_file, keys)
           dict_writer.writeheader()
-          try:
-            dict_writer.writerows(g)
-          except UnicodeEncodeError:
-            print('error')
+          #try:
+          dict_writer.writerows(g)
+         # except UnicodeEncodeError:
+           # print('error')
 
 import torch
 from torchtext import data

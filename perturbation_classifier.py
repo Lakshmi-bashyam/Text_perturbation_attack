@@ -1,19 +1,5 @@
 import csv
 import json
-
-
-with open('backup.json') as f:
-        g = json.load(f)
-        keys = g[0].keys()
-        print(keys)
-        with open('perturbed_data.csv', 'w', newline='', encoding='utf8')  as output_file:
-          dict_writer = csv.DictWriter(output_file, keys)
-          dict_writer.writeheader()
-          #try:
-          dict_writer.writerows(g)
-         # except UnicodeEncodeError:
-           # print('error')
-
 import torch
 from torchtext import data
 
@@ -26,7 +12,10 @@ LABEL = data.LabelField(dtype = torch.float,batch_first=True)
 fields = [('text',TEXT),('label', LABEL)]
 
 import pandas as pd
-df = pd.read_csv('perturbed_data.csv')
+df = pd.read_csv('combined_data.csv')
+print(df.columns)
+df.drop('Unnamed: 0', inplace=True, axis=1)
+print(df.head(10))
 df.to_csv('tbd.csv', index=False)
 
 training_data=data.TabularDataset(path = 'tbd.csv',format = 'csv',fields = fields,skip_header = True)

@@ -97,61 +97,69 @@ def get_perturbed_text(text):
         orig_text = orig_text.replace(ranking[j][0],synlist[index])
     return orig_text
 
-iterations = 700
-
+iterations = 1000
+start_index = 8000
 examples = []
-for label in ['pos', 'neg']:
-    index = 0
-    for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
-        with io.open(fname, 'r', encoding="utf-8") as f:
-            print('index: ', index)
-            text = f.readline()
-            examples.append({'text': text,'label': 0})
-            index = index +1
-            if (index >= 700):
-                break
+##for label in ['pos', 'neg']:
+  #  index = 0
+   # for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
+    #    with io.open(fname, 'r', encoding="utf-8") as f:
+     #       print('index: ', index)
+      #      text = f.readline()
+       #     examples.append({'text': text,'label': 0})
+        #    index = index +1
+         #   if (index >= iterations):
+          #      break
 for label in ['pos', 'neg']:
     index = 0
     for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
-            print('index: ', index)
-            text = f.readline()
-            examples.append({'text': text,'label': 0})
-            index = index + 1
-            if (index >= 700):
-                break
+            #print('index: ', index)
+            if (index < start_index):
+                text = f.readline()
+                print('index: ', index)
+                index = index + 1
+            else:
+                print('adding index: ', index)
+                text = f.readline()
+                examples.append({'text': text,'label': 0})
+                index = index + 1
+                if (index >= iterations):
+                    break
 
 print(len(examples))
 
 perturbed_examples = []
 for label in ['pos', 'neg']:
     index = 0
-    for fname in glob.iglob(os.path.join('./aclImdb/train', label, '*.txt')):
-       # print('here')
-        with io.open(fname, 'r', encoding="utf-8") as f:
-            print('index: ', index)
-            text = f.readline()
-            #print('text: ', text)
-            perturbed_text = get_perturbed_text(text)
-            #print('perturbed text: ', perturbed_text)
-            perturbed_examples.append({'text': perturbed_text,'label': 1})
-            index = index + 1
-            if (index >= 700):
-                break
-
-for label in ['pos', 'neg']:
-    index = 0
     for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
         with io.open(fname, 'r', encoding="utf-8") as f:
-            print('index: ', index)
-            text = f.readline()
+            if(index < start_index):
+                text = f.readline()
+                print('index: ', index)
+                index = index + 1
+            else:
+                print('adding index: ', index)
+                text = f.readline()
+                perturbed_text = get_perturbed_text(text)
+                perturbed_examples.append({'text': perturbed_text,'label': 1})
+                index = index + 1
+                if (index >= iterations):
+                    break
+
+#for label in ['pos', 'neg']:
+    #index = 0
+    #for fname in glob.iglob(os.path.join('./aclImdb/test', label, '*.txt')):
+        #with io.open(fname, 'r', encoding="utf-8") as f:
+            #print('index: ', index)
+            #text = f.readline()
             #print('text: ', text)
-            perturbed_text = get_perturbed_text(text)
+            #perturbed_text = get_perturbed_text(text)
             #print('perturbed text: ', perturbed_text)
-            perturbed_examples.append({'text': perturbed_text,'label': 1})
-            index = index + 1
-            if (index >= 700):
-                break
+            #perturbed_examples.append({'text': perturbed_text,'label': 1})
+            #index = index + 1
+            #if (index >= iterations):
+                #break
 
 final_data = []
 for item in examples:
@@ -161,6 +169,6 @@ for item in perturbed_examples:
 
 print(len(final_data))
 
-with open('final_data.json', 'w') as fout:
+with open('final_data_8000.json', 'w') as fout:
     json.dump(final_data, fout)
 print("finished")

@@ -12,6 +12,7 @@ import json
 
 stop_words = stopwords.words('english')
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+from nltk.corpus import wordnet as wn
 nlp = spacy.load('en')
 vocab = json.load(open('vocab.json'))
 reverse_vocab = {}

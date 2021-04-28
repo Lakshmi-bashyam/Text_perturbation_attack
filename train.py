@@ -20,7 +20,7 @@ def train(model, iterator, optimizer, criterion):
         
         optimizer.zero_grad()
         text, text_lengths = batch.text
-        predictions = model(text, text_lengths).squeeze()
+        predictions = model(text, text_lengths.cpu()).squeeze()
         
         loss = criterion(predictions, batch.label)
         acc = binary_accuracy(predictions, batch.label)
@@ -44,7 +44,7 @@ def evaluate(model, iterator, criterion):
         for batch in iterator:
 
             text, text_lengths = batch.text            
-            predictions = model(text, text_lengths).squeeze()
+            predictions = model(text, text_lengths.cpu()).squeeze()
             
             loss = criterion(predictions, batch.label)            
             acc = binary_accuracy(predictions, batch.label)

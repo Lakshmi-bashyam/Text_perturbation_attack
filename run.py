@@ -57,8 +57,8 @@ for batch in test_iter:
     ori_op = model(ip, ip_len).squeeze()
     acc = binary_accuracy(ori_op, label)
     epoch_acc += acc.item()
-    # print(ori_op.item())
-    
+    # print(ori_op.item))
+
     ranking, ip_text = get_ranking(ip, model, ori_op)
     # print(ip_text)
 

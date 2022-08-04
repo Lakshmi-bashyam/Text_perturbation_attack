@@ -1,3 +1,6 @@
 # Text perturbation Attack and Defense with Synonym replacement (TADS)
-## Abstract
-Adversarial attacks on images have gained a lot of momentum in the last few years. However, it has been difficult to apply the same gradient-based methods on discretetext data. A lot of text classification models are available for public or on demand. An interesting question to ask is if we can attack a black box text classification model. We also explore how we can defend such an attack in this work. We propose identification and ranking the important words which influence the output and replace them with synonyms with a constraint on sentence embedding to preserve the semantic consistency. We explore two methods of replacing words: (i) synonym replacement using WordNet; (ii) word replacement using GloVe. For the defense mechanism, we tried two text classifiers: (i) LSTM classifier; (ii) BERTbased classifier
+
+![TADS_team_AJL_v3_page-0001](https://user-images.githubusercontent.com/40004434/182960013-7354872a-4988-4000-9237-d87be5635f29.jpg)
+![TADS_team_AJL_v3_page-0002](https://user-images.githubusercontent.com/40004434/182960145-b44e4632-fc0a-49a3-9e69-e5403f132311.jpg)
+![TADS_team_AJL_v3_page-0003](https://user-images.githubusercontent.com/40004434/182960168-43e22e4e-baa4-44b1-967b-4165d5dde774.jpg)
+![TADS_team_AJL_v3_page-0004](https://user-images.githubusercontent.com/40004434/182960194-3a2ae50c-fe76-484d-83eb-2a3ee0e9543d.jpg)
